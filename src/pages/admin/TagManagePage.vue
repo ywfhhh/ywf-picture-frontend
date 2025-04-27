@@ -1,17 +1,15 @@
 <template>
-  <div id="userManagePage">
+  <div id="tagManagePage">
     <!-- 搜索表单 -->
     <a-form layout="inline" :model="searchParams" @finish="doSearch">
-      <a-form-item label="账号">
-        <a-input v-model:value="searchParams.userAccount" placeholder="输入账号" allow-clear />
-      </a-form-item>
-      <a-form-item label="用户名">
-        <a-input v-model:value="searchParams.userName" placeholder="输入用户名" allow-clear />
+      <a-form-item label="标签名">
+        <a-input v-model:value="searchParams.tagName" placeholder="输入标签名" allow-clear />
       </a-form-item>
       <a-form-item>
         <a-button type="primary" html-type="submit">搜索</a-button>
       </a-form-item>
     </a-form>
+    <!--    <a-button type="primary" @click="doAdd(record)">新增</a-button>-->
     <div style="margin-bottom: 16px" />
     <!-- 表格 -->
     <a-table
@@ -21,19 +19,11 @@
       @change="doTableChange"
     >
       <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'userAvatar'">
-          <a-image :src="record.userAvatar" :width="120" />
+        <template v-if="column.dataIndex === 'tagName'">
+          {{ record.tagName }}
         </template>
-        <template v-else-if="column.dataIndex === 'userRole'">
-          <div v-if="record.userRole === 'admin'">
-            <a-tag color="green">管理员</a-tag>
-          </div>
-          <div v-else-if="record.userRole === 'user'">
-            <a-tag color="blue">普通用户</a-tag>
-          </div>
-          <div v-else-if="record.userRole === 'guest'">
-            <a-tag color="gray">访客</a-tag>
-          </div>
+        <template v-if="column.dataIndex === 'userName'">
+          {{ record.userName }}
         </template>
         <template v-if="column.dataIndex === 'createTime'">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
@@ -50,94 +40,102 @@
   </div>
   <!-- 更新用的 Modal + Form -->
   <a-modal
-    v-model:open="modalVisible"
-    title="更新用户信息"
-    @ok="onSubmit"
-    @cancel="closeModal"
+    v-model:open="updateModalVisible"
+    title="更新标签信息"
+    @ok="onSubmitUpdate"
+    @cancel="closeUpdateModal"
     :confirm-loading="updating"
   >
     <a-form
-      ref="editForm"
-      :model="form"
+      ref="updateFormNode"
+      :model="updateForm"
       :rules="rules"
       :label-col="{ span: 5 }"
       :wrapper-col="{ span: 16 }"
-      @finish="onSubmit"
+      @finish="onSubmitUpdate"
     >
-      <a-form-item label="账号" name="userAccount">
-        <a-input v-model:value="form.userAccount" placeholder="请输入账号" />
+      <a-form-item label="Id" name="id">
+        <a-input :value="updateForm.id" readonly />
       </a-form-item>
-
-      <a-form-item label="用户名" name="userName">
-        <a-input v-model:value="form.userName" placeholder="请输入用户名" />
+      <a-form-item label="标签名" name="tagName">
+        <a-input v-model:value="updateForm.tagName" placeholder="请输入标签名" />
       </a-form-item>
+    </a-form>
+  </a-modal>
 
-      <a-form-item label="用户角色" name="userRole">
-        <a-select
-          v-model:value="form.userRole"
-          placeholder="请选择角色"
-          :options="roleOptions"
-          allow-clear
-        />
+  <!-- 新增用的 Modal + Form -->
+  <a-modal
+    v-model:open="addModalVisible"
+    title="新增标签信息"
+    @ok="onSubmitAdd"
+    @cancel="closeAddModal"
+    :confirm-loading="adding"
+  >
+    <a-form
+      ref="addFormNode"
+      :model="addForm"
+      :rules="rules"
+      :label-col="{ span: 5 }"
+      :wrapper-col="{ span: 16 }"
+      @finish="onSubmitAdd"
+    >
+      <a-form-item label="标签名" name="tagName">
+        <a-input v-model:value="addForm.tagName" placeholder="请输入标签名" />
       </a-form-item>
     </a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import {
-  deleteUserUsingPost,
-  listUserVoByPageUsingPost,
-  updateUserUsingPost,
-} from '@/api/userController.ts'
+import { deleteTagUsingPost, listTagByPageUsingPost, addTagUsingPost } from '@/api/tagController.ts'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 
-const modalVisible = ref(false)
+const updateModalVisible = ref(false)
+const addModalVisible = ref(false)
 const updating = ref(false)
+const adding = ref(false)
 // 3. 你的数据模型
 // 表单数据
-const form = reactive<API.UserVO>({
-  userAccount: '',
-  userName: '',
-  userRole: [],
-} as API.UserVO)
-
+const updateForm = reactive<API.TagVO>({
+  id: null,
+  tagName: '',
+} as API.TagVO)
+const addForm = reactive<API.TagVO>({
+  tagName: '',
+} as API.TagVO)
 // 校验规则
 const rules = {
-  userAccount: [{ required: false, message: '账号名', trigger: 'blur' }],
-  userName: [{ required: false, message: '用户名', trigger: 'blur' }],
-  userRole: [{ required: true, message: '请选择用户角色', trigger: 'change' }],
+  tagName: [{ required: false, message: '标签名', trigger: 'blur' }],
 }
-// 角色列表选项
-const roleOptions = [
-  { label: '管理员', value: 'admin' },
-  { label: '普通用户', value: 'user' },
-  { label: '访客', value: 'guest' },
-]
-
 // a-form 组件实例
-const editForm = ref<any>(null)
+const updateFormNode = ref<any>(null)
+// a-form 组件实例
+const addFormNode = ref<any>(null)
 
 // 打开编辑对话框
-function doUpdate(record: API.UserVO) {
-  Object.assign(form, record) // 取消注释此行
-  modalVisible.value = true
+function doUpdate(record: API.TagVO) {
+  Object.assign(updateForm, record) // 取消注释此行
+  updateModalVisible.value = true
+}
+
+// 打开新增对话框
+function doAdd() {
+  addModalVisible.value = true
 }
 
 // onSubmit 里通过 editForm.value.validate() 去验证
-async function onSubmit() {
-  if (!editForm.value) return
-  // 7. 先校验
-  const valid = await editForm.value.validate().catch(() => false)
+async function onSubmitUpdate() {
+  if (!updateFormNode.value) return
+  const valid = await updateFormNode.value.validate().catch(() => false)
   if (!valid) return
 
   updating.value = true
   try {
-    const res = await updateUserUsingPost(form)
+    const res = await addTagUsingPost(updateForm)
     if (res.data.code === 0) {
       message.success('更新成功')
-      closeModal()
+      closeUpdateModal()
       fetchData()
     } else {
       message.error('更新失败：' + res.data.message)
@@ -149,10 +147,38 @@ async function onSubmit() {
   }
 }
 
+// onSubmit 里通过 editForm.value.validate() 去验证
+async function onSubmitAdd() {
+  if (!addFormNode.value) return
+  const valid = await addFormNode.value.validate().catch(() => false)
+  if (!valid) return
+  adding.value = true
+  try {
+    const res = await addTagUsingPost(addForm)
+    if (res.data.code === 0) {
+      message.success('更新成功')
+      closeAddModal()
+      fetchData()
+    } else {
+      message.error('更新失败：' + res.data.message)
+    }
+  } catch (e) {
+    message.error('保存失败')
+  } finally {
+    adding.value = false
+  }
+}
+
 // 关闭对话框并重置表单
-function closeModal() {
-  modalVisible.value = false
-  setTimeout(() => editForm.value?.resetFields(), 300)
+function closeUpdateModal() {
+  updateModalVisible.value = false
+  setTimeout(() => updateForm.value?.resetFields(), 300)
+}
+
+// 关闭对话框并重置表单
+function closeAddModal() {
+  addModalVisible.value = false
+  setTimeout(() => addForm.value?.resetFields(), 300)
 }
 
 const columns = [
@@ -161,24 +187,12 @@ const columns = [
     dataIndex: 'id',
   },
   {
-    title: '账号',
-    dataIndex: 'userAccount',
+    title: '标签名',
+    dataIndex: 'tagName',
   },
   {
     title: '用户名',
     dataIndex: 'userName',
-  },
-  {
-    title: '头像',
-    dataIndex: 'userAvatar',
-  },
-  {
-    title: '简介',
-    dataIndex: 'userProfile',
-  },
-  {
-    title: '用户角色',
-    dataIndex: 'userRole',
   },
   {
     title: '创建时间',
@@ -191,11 +205,11 @@ const columns = [
 ]
 
 // 定义数据
-const dataList = ref<API.UserVO[]>([])
+const dataList = ref<API.TagVO[]>([])
 const total = ref(0)
 
 // 搜索条件
-const searchParams = reactive<API.UserQueryRequest>({
+const searchParams = reactive<API.TagQueryRequest>({
   current: 1,
   pageSize: 10,
   sortField: 'createTime',
@@ -204,7 +218,7 @@ const searchParams = reactive<API.UserQueryRequest>({
 
 // 获取数据
 const fetchData = async () => {
-  const res = await listUserVoByPageUsingPost({
+  const res = await listTagByPageUsingPost({
     ...searchParams,
   })
   if (res.data.code === 0 && res.data.data) {
@@ -246,12 +260,12 @@ const doSearch = () => {
 }
 
 // 删除数据
-const doDelete = async (record: API.UserVO) => {
-  id = record.id
+const doDelete = async (record: API.TagVO) => {
+  var id = record.id
   if (!id) {
     return
   }
-  const res = await deleteUserUsingPost({ id })
+  const res = await deleteTagUsingPost({ id })
   if (res.data.code === 0) {
     message.success('删除成功')
     // 刷新数据

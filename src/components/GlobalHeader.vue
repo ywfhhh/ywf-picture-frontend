@@ -84,6 +84,11 @@ const originItems = [
     title: '图片管理',
   },
   {
+    key: '/admin/tagManage',
+    label: '标签管理',
+    title: '标签管理',
+  },
+  {
     key: '/admin/spaceManage',
     label: '空间管理',
     title: '空间管理',

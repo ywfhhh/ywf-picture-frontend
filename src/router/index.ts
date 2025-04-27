@@ -1,8 +1,12 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/pages/HomePage.vue'
 import UserLoginPage from '@/pages/user/UserLoginPage.vue'
 import UserRegisterPage from '@/pages/user/UserRegisterPage.vue'
 import UserManagePage from '@/pages/admin/UserManagePage.vue'
+import PictureManagePage from '@/pages/admin/PictureManagePage.vue'
+import AddPicturePage from '@/pages/AddPicturePage.vue'
+import PictureDetailPage from '@/pages/PictureDetailPage.vue'
+import TagManagePage from '@/pages/admin/TagManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,11 +31,16 @@ const router = createRouter({
       name: '用户管理',
       component: UserManagePage,
     },
-    // {
-    //   path: '/admin/pictureManage',
-    //   name: '图片管理',
-    //   component: PictureManagePage,
-    // },
+    {
+      path: '/admin/pictureManage',
+      name: '图片管理',
+      component: PictureManagePage,
+    },
+    {
+      path: '/admin/tagManage',
+      name: '标签管理',
+      component: TagManagePage,
+    },
     // {
     //   path: '/admin/spaceManage',
     //   name: '空间管理',
@@ -43,22 +52,22 @@ const router = createRouter({
     //   component: SpaceUserManagePage,
     //   props: true,
     // },
-    // {
-    //   path: '/add_picture',
-    //   name: '创建图片',
-    //   component: AddPicturePage,
-    // },
+    {
+      path: '/add_picture',
+      name: '创建图片',
+      component: AddPicturePage,
+    },
     // {
     //   path: '/add_picture/batch',
     //   name: '批量创建图片',
     //   component: AddPictureBatchPage,
     // },
-    // {
-    //   path: '/picture/:id',
-    //   name: '图片详情',
-    //   component: PictureDetailPage,
-    //   props: true,
-    // },
+    {
+      path: '/picture/:id',
+      name: '图片详情',
+      component: PictureDetailPage,
+      props: true,
+    },
     // {
     //   path: '/add_space',
     //   name: '创建空间',
