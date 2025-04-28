@@ -1,5 +1,12 @@
 <template>
   <div id="tagManagePage">
+    <a-flex justify="space-between">
+      <h2>标签管理</h2>
+      <a-space>
+        <a-button type="primary" @click="doAdd">+ 创建标签</a-button>
+      </a-space>
+    </a-flex>
+    <div style="margin-bottom: 16px" />
     <!-- 搜索表单 -->
     <a-form layout="inline" :model="searchParams" @finish="doSearch">
       <a-form-item label="标签名">

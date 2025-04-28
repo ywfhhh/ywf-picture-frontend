@@ -12,10 +12,10 @@
         <!-- 图片上传组件 -->
         <PictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess" />
       </a-tab-pane>
-<!--      <a-tab-pane key="url" tab="URL 上传" force-render>-->
-<!--        &lt;!&ndash; URL 图片上传组件 &ndash;&gt;-->
-<!--        <UrlPictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess" />-->
-<!--      </a-tab-pane>-->
+      <a-tab-pane key="url" tab="URL 上传" force-render>
+        <!-- URL 图片上传组件 -->
+        <UrlPictureUpload :picture="picture" :spaceId="spaceId" :onSuccess="onSuccess" />
+      </a-tab-pane>
     </a-tabs>
     <!-- 图片编辑 -->
     <div v-if="picture" class="edit-bar">
@@ -70,8 +70,8 @@
       <a-form-item name="tags" label="标签">
         <a-select
           v-model:value="pictureForm.tags"
-          mode="tags"
-          placeholder="请输入标签"
+          mode="multiple"
+          placeholder="请选择标签"
           :options="tagOptions"
           allow-clear
         />
@@ -93,7 +93,7 @@ import {
   listPictureTagCategoryUsingGet,
 } from '@/api/pictureController.ts'
 import { useRoute, useRouter } from 'vue-router'
-// import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
+import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 // import ImageCropper from '@/components/ImageCropper.vue'
 import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 // import ImageOutPainting from '@/components/ImageOutPainting.vue'
@@ -124,7 +124,6 @@ const onSuccess = (newPicture: API.PictureVO) => {
  * @param values
  */
 const handleSubmit = async (values: any) => {
-  console.log(values)
   const pictureId = picture.value.id
   if (!pictureId) {
     return

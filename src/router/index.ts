@@ -7,6 +7,8 @@ import PictureManagePage from '@/pages/admin/PictureManagePage.vue'
 import AddPicturePage from '@/pages/AddPicturePage.vue'
 import PictureDetailPage from '@/pages/PictureDetailPage.vue'
 import TagManagePage from '@/pages/admin/TagManagePage.vue'
+import addPictureBatchPage from '@/pages/addPictureBatchPage.vue'
+import UserEditPage from '@/pages/user/UserEditPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +27,11 @@ const router = createRouter({
       path: '/user/register',
       name: '用户注册',
       component: UserRegisterPage,
+    },
+    {
+      path: '/user/edit',
+      name: '修改用户信息',
+      component: UserEditPage,
     },
     {
       path: '/admin/userManage',
@@ -57,11 +64,11 @@ const router = createRouter({
       name: '创建图片',
       component: AddPicturePage,
     },
-    // {
-    //   path: '/add_picture/batch',
-    //   name: '批量创建图片',
-    //   component: AddPictureBatchPage,
-    // },
+    {
+      path: '/add_picture/batch',
+      name: '批量创建图片',
+      component: addPictureBatchPage,
+    },
     {
       path: '/picture/:id',
       name: '图片详情',

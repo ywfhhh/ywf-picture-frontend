@@ -34,6 +34,12 @@
                       我的空间
                     </router-link>
                   </a-menu-item>
+                  <a-menu-item>
+                    <router-link to="/user/edit">
+                      <UserOutlined />
+                      个人设置
+                    </router-link>
+                  </a-menu-item>
                   <a-menu-item @click="doLogout">
                     <LogoutOutlined />
                     退出登录

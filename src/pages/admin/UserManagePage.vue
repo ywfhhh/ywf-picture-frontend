@@ -88,7 +88,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import {
   deleteUserUsingPost,
   listUserVoByPageUsingPost,
-  updateUserUsingPost,
+  userUpdateUsingPost,
 } from '@/api/userController.ts'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
@@ -134,7 +134,7 @@ async function onSubmit() {
 
   updating.value = true
   try {
-    const res = await updateUserUsingPost(form)
+    const res = await userUpdateUsingPost(form)
     if (res.data.code === 0) {
       message.success('更新成功')
       closeModal()

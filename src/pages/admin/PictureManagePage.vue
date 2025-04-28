@@ -104,7 +104,9 @@
             <a-button type="link" :href="`/add_picture?id=${record.id}`" target="_blank">
               编辑
             </a-button>
-            <a-button danger @click="doDelete(record.id)">删除</a-button>
+            <a-popconfirm title="确认是否删除？" ok-text="是" cancel-text="否" @confirm="doDelete(record.id)">
+              <a-button type="link">删除</a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </template>
@@ -115,7 +117,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import {
   deletePictureUsingPost,
-  // doPictureReviewUsingPost,
+  doPictureReviewUsingPost,
   listPictureByPageUsingPost,
 } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
