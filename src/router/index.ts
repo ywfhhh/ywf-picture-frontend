@@ -9,6 +9,12 @@ import PictureDetailPage from '@/pages/PictureDetailPage.vue'
 import TagManagePage from '@/pages/admin/TagManagePage.vue'
 import addPictureBatchPage from '@/pages/addPictureBatchPage.vue'
 import UserEditPage from '@/pages/user/UserEditPage.vue'
+import AddSpacePage from '@/pages/AddSpacePage.vue'
+import SpaceManagePage from '@/pages/admin/SpaceManagePage.vue'
+import SpaceDetailPage from '@/pages/SpaceDetailPage.vue'
+import MySpacePage from '@/pages/MySpacePage.vue'
+import PictureReviewPage from '@/pages/reviewer/PictureReviewPage.vue'
+import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,21 +50,26 @@ const router = createRouter({
       component: PictureManagePage,
     },
     {
+      path: '/reviewer/pictureReview',
+      name: '图片审核',
+      component: PictureReviewPage,
+    },
+    {
       path: '/admin/tagManage',
       name: '标签管理',
       component: TagManagePage,
     },
-    // {
-    //   path: '/admin/spaceManage',
-    //   name: '空间管理',
-    //   component: SpaceManagePage,
-    // },
-    // {
-    //   path: '/spaceUserManage/:id',
-    //   name: '空间成员管理',
-    //   component: SpaceUserManagePage,
-    //   props: true,
-    // },
+    {
+      path: '/admin/spaceManage',
+      name: '空间管理',
+      component: SpaceManagePage,
+    },
+    {
+      path: '/spaceUserManage/:id',
+      name: '空间成员管理',
+      component: SpaceUserManagePage,
+      props: true,
+    },
     {
       path: '/add_picture',
       name: '创建图片',
@@ -75,22 +86,22 @@ const router = createRouter({
       component: PictureDetailPage,
       props: true,
     },
-    // {
-    //   path: '/add_space',
-    //   name: '创建空间',
-    //   component: AddSpacePage,
-    // },
-    // {
-    //   path: '/my_space',
-    //   name: '我的空间',
-    //   component: MySpacePage,
-    // },
-    // {
-    //   path: '/space/:id',
-    //   name: '空间详情',
-    //   component: SpaceDetailPage,
-    //   props: true,
-    // },
+    {
+      path: '/add_space',
+      name: '创建空间',
+      component: AddSpacePage,
+    },
+    {
+      path: '/my_space',
+      name: '我的空间',
+      component: MySpacePage,
+    },
+    {
+      path: '/space/:id',
+      name: '空间详情',
+      component: SpaceDetailPage,
+      props: true,
+    },
     // {
     //   path: '/space_analyze',
     //   name: '空间分析',

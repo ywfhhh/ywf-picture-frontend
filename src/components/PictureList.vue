@@ -108,10 +108,11 @@ const doDelete = async (picture, e) => {
   // 阻止冒泡
   e.stopPropagation()
   const id = picture.id
-  if (!id) {
+  const spaceId = picture.spaceId
+  if (!id||!spaceId) {
     return
   }
-  const res = await deletePictureUsingPost({ id })
+  const res = await deletePictureUsingPost({ id, spaceId })
   if (res.data.code === 0) {
     message.success('删除成功')
     props.onReload?.()

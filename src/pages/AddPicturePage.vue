@@ -97,7 +97,7 @@ import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
 // import ImageCropper from '@/components/ImageCropper.vue'
 import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
 // import ImageOutPainting from '@/components/ImageOutPainting.vue'
-// import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
+import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -107,9 +107,9 @@ const pictureForm = reactive<API.PictureEditRequest>({})
 const uploadType = ref<'file' | 'url'>('file')
 // 空间 id
 const spaceId = computed(() => {
+  console.log(route.query)
   return route.query?.spaceId
 })
-
 /**
  * 图片上传成功
  * @param newPicture

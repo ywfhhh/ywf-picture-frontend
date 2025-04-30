@@ -163,7 +163,7 @@ export async function userUpdateAvatarUsingPost(
     }
   })
 
-  return request<API.BaseResponseBoolean_>('/api/user/updateAvatar', {
+  return request<API.BaseResponseString_>('/api/user/updateAvatar', {
     method: 'POST',
     data: formData,
     requestType: 'form',
