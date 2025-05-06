@@ -25,20 +25,20 @@
           AI 扩图
         </a-button>
       </a-space>
-<!--      <ImageCropper-->
-<!--        ref="imageCropperRef"-->
-<!--        :imageUrl="picture?.url"-->
-<!--        :picture="picture"-->
-<!--        :spaceId="spaceId"-->
-<!--        :space="space"-->
-<!--        :onSuccess="onCropSuccess"-->
-<!--      />-->
-<!--      <ImageOutPainting-->
-<!--        ref="imageOutPaintingRef"-->
-<!--        :picture="picture"-->
-<!--        :spaceId="spaceId"-->
-<!--        :onSuccess="onImageOutPaintingSuccess"-->
-<!--      />-->
+      <ImageCropper
+        ref="imageCropperRef"
+        :imageUrl="picture?.url"
+        :picture="picture"
+        :spaceId="spaceId"
+        :space="space"
+        :onSuccess="onCropSuccess"
+      />
+      <ImageOutPainting
+        ref="imageOutPaintingRef"
+        :picture="picture"
+        :spaceId="spaceId"
+        :onSuccess="onImageOutPaintingSuccess"
+      />
     </div>
     <!-- 图片信息表单 -->
     <a-form
@@ -94,9 +94,9 @@ import {
 } from '@/api/pictureController.ts'
 import { useRoute, useRouter } from 'vue-router'
 import UrlPictureUpload from '@/components/UrlPictureUpload.vue'
-// import ImageCropper from '@/components/ImageCropper.vue'
+import ImageCropper from '@/components/ImageCropper.vue'
 import { EditOutlined, FullscreenOutlined } from '@ant-design/icons-vue'
-// import ImageOutPainting from '@/components/ImageOutPainting.vue'
+import ImageOutPainting from '@/components/ImageOutPainting.vue'
 import { getSpaceVoByIdUsingGet } from '@/api/spaceController.ts'
 
 const router = useRouter()
@@ -107,7 +107,6 @@ const pictureForm = reactive<API.PictureEditRequest>({})
 const uploadType = ref<'file' | 'url'>('file')
 // 空间 id
 const spaceId = computed(() => {
-  console.log(route.query)
   return route.query?.spaceId
 })
 /**

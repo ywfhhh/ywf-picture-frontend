@@ -17,9 +17,9 @@
           allow-clear
         />
       </a-form-item>
-      <a-form-item label="类型">
-        <a-input v-model:value="searchParams.category" placeholder="请输入类型" allow-clear />
-      </a-form-item>
+<!--      <a-form-item label="类型">-->
+<!--        <a-input v-model:value="searchParams.category" placeholder="请输入类型" allow-clear />-->
+<!--      </a-form-item>-->
       <a-form-item label="标签">
         <a-select
           v-model:value="searchParams.tags"
@@ -143,10 +143,10 @@ const columns = [
     dataIndex: 'introduction',
     ellipsis: true,
   },
-  {
-    title: '类型',
-    dataIndex: 'category',
-  },
+  // {
+  //   title: '类型',
+  //   dataIndex: 'category',
+  // },
   {
     title: '标签',
     dataIndex: 'tags',

@@ -15,6 +15,8 @@ import SpaceDetailPage from '@/pages/SpaceDetailPage.vue'
 import MySpacePage from '@/pages/MySpacePage.vue'
 import PictureReviewPage from '@/pages/reviewer/PictureReviewPage.vue'
 import SpaceUserManagePage from '@/pages/admin/SpaceUserManagePage.vue'
+import SearchPicturePage from '@/pages/SearchPicturePage.vue'
+import SpaceAnalyzePage from '@/pages/SpaceAnalyzePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,7 +83,7 @@ const router = createRouter({
       component: addPictureBatchPage,
     },
     {
-      path: '/picture/:id',
+      path: '/picture/:id/:spaceId',
       name: '图片详情',
       component: PictureDetailPage,
       props: true,
@@ -102,16 +104,16 @@ const router = createRouter({
       component: SpaceDetailPage,
       props: true,
     },
-    // {
-    //   path: '/space_analyze',
-    //   name: '空间分析',
-    //   component: SpaceAnalyzePage,
-    // },
-    // {
-    //   path: '/search_picture',
-    //   name: '图片搜索',
-    //   component: SearchPicturePage,
-    // },
+    {
+      path: '/space_analyze',
+      name: '空间分析',
+      component: SpaceAnalyzePage,
+    },
+    {
+      path: '/search_picture',
+      name: '图片搜索',
+      component: SearchPicturePage,
+    },
     // {
     //   path: '/user_exchange_vip',
     //   name: '用户兑换会员',

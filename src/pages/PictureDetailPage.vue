@@ -81,7 +81,7 @@
         </a-card>
       </a-col>
     </a-row>
-<!--    <ShareModal ref="shareModalRef" :link="shareLink" />-->
+    <ShareModal ref="shareModalRef" :link="shareLink" />
   </div>
 </template>
 
@@ -97,11 +97,12 @@ import {
 } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { downloadImage, formatSize, toHexColor } from '@/utils'
-// import ShareModal from '@/components/ShareModal.vue'
+import ShareModal from '@/components/ShareModal.vue'
 import { SPACE_PERMISSION_ENUM } from '@/constants/space.ts'
 
 interface Props {
   id: string | number
+  spaceId: string | number
 }
 
 const props = defineProps<Props>()
@@ -123,6 +124,7 @@ const fetchPictureDetail = async () => {
   try {
     const res = await getPictureVoByIdUsingGet({
       id: props.id,
+      spaceId: props.spaceId
     })
     if (res.data.code === 0 && res.data.data) {
       picture.value = res.data.data

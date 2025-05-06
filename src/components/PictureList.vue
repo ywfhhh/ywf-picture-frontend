@@ -39,7 +39,7 @@
         </a-list-item>
       </template>
     </a-list>
-<!--    <ShareModal ref="shareModalRef" :link="shareLink" />-->
+    <ShareModal ref="shareModalRef" :link="shareLink" />
   </div>
 </template>
 
@@ -53,7 +53,7 @@ import {
 } from '@ant-design/icons-vue'
 import { deletePictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
-// import ShareModal from '@/components/ShareModal.vue'
+import ShareModal from '@/components/ShareModal.vue'
 import { ref } from 'vue'
 
 interface Props {
@@ -77,7 +77,7 @@ const router = useRouter()
 // 跳转至图片详情页
 const doClickPicture = (picture: API.PictureVO) => {
   router.push({
-    path: `/picture/${picture.id}`,
+    path: `/picture/${picture.id}/${picture.spaceId}`,
   })
 }
 
@@ -86,7 +86,7 @@ const doSearch = (picture, e) => {
   // 阻止冒泡
   e.stopPropagation()
   // 打开新的页面
-  window.open(`/search_picture?pictureId=${picture.id}`)
+  window.open(`/search_picture?pictureId=${picture.id}&spaceId=${picture.spaceId}`, '_blank')
 }
 
 // 编辑

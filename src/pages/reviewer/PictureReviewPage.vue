@@ -254,6 +254,7 @@ const handleReview = async (record: API.Picture, reviewStatus: number) => {
     reviewStatus === PIC_REVIEW_STATUS_ENUM.PASS ? '管理员操作通过' : '管理员操作拒绝'
   const res = await doPictureReviewUsingPost({
     id: record.id,
+    spaceId: record.spaceId,
     reviewStatus,
     reviewMessage,
   })
