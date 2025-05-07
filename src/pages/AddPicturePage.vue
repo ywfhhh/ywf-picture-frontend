@@ -171,17 +171,15 @@ const getTagCategoryOptions = async () => {
   }
 }
 
-onMounted(() => {
-  getTagCategoryOptions()
-})
-
 // 获取老数据
 const getOldPicture = async () => {
   // 获取到 id
   const id = route.query?.id
-  if (id) {
+  const spaceId = route.query?.spaceId
+  if (id && spaceId) {
     const res = await getPictureVoByIdUsingGet({
       id,
+      spaceId
     })
     if (res.data.code === 0 && res.data.data) {
       const data = res.data.data
@@ -196,6 +194,7 @@ const getOldPicture = async () => {
 
 onMounted(() => {
   getOldPicture()
+  getTagCategoryOptions()
 })
 
 // ----- 图片编辑器引用 ------

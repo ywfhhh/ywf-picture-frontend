@@ -100,11 +100,6 @@ const originItems = [
     title: '空间管理',
   },
   {
-    key: 'others',
-    label: h('a', { href: 'https://www.codefather.cn', target: '_blank' }, '编程导航'),
-    title: '编程导航',
-  },
-  {
     key: '/reviewer/pictureReview',
     label: '图片审核',
     title: '图片审核',
@@ -123,7 +118,7 @@ const filterMenus = (menus = [] as MenuProps['items']) => {
     }
     if (menu?.key?.startsWith('/reviewer')) {
       const loginUser = loginUserStore.loginUser
-      if (!loginUser && loginUser.userRole !== 'reviewer' && loginUser.userRole !== 'admin') {
+      if (loginUser && loginUser.userRole !== 'reviewer' && loginUser.userRole !== 'admin') {
         return false
       }
     }

@@ -1,10 +1,12 @@
 export default class PictureEditWebSocket {
   private pictureId: number
+  private spaceId: number
   private socket: WebSocket | null
   private eventHandlers: any
 
-  constructor(pictureId: number) {
+  constructor(pictureId: number, pictureSpaceId: number) {
     this.pictureId = pictureId // 当前编辑的图片 ID
+    this.spaceId = pictureSpaceId
     this.socket = null // WebSocket 实例
     this.eventHandlers = {} // 自定义事件处理器
   }
@@ -13,10 +15,10 @@ export default class PictureEditWebSocket {
    * 初始化 WebSocket 连接
    */
   connect() {
-    const DEV_BASE_URL = "ws://localhost:8123";
+    const DEV_BASE_URL = 'ws://localhost:8123'
     // 线上地址
     // const PROD_BASE_URL = "ws://81.69.229.63";
-    const url = `${DEV_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}`
+    const url = `${DEV_BASE_URL}/api/ws/picture/edit?pictureId=${this.pictureId}&spaceId=${this.spaceId}`
     this.socket = new WebSocket(url)
 
     // 设置携带 cookie

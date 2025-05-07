@@ -35,7 +35,7 @@
         <a-button @click="changeScale(1)" :disabled="!canEdit">放大</a-button>
         <a-button @click="changeScale(-1)" :disabled="!canEdit">缩小</a-button>
         <a-button type="primary" :loading="loading" :disabled="!canEdit" @click="handleConfirm"
-        >确认
+          >确认
         </a-button>
       </a-space>
     </div>
@@ -47,7 +47,7 @@ import { computed, onUnmounted, ref, watchEffect } from 'vue'
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/useLoginUserStore.ts'
-// import PictureEditWebSocket from '@/utils/pictureEditWebSocket.ts'
+import PictureEditWebSocket from '@/utils/pictureEditWebSocket.ts'
 import { PICTURE_EDIT_ACTION_ENUM, PICTURE_EDIT_MESSAGE_TYPE_ENUM } from '@/constants/picture.ts'
 import { SPACE_TYPE_ENUM } from '@/constants/space.ts'
 
@@ -177,114 +177,115 @@ const canEdit = computed(() => {
 })
 
 // 编写 WebSocket 逻辑
-// let websocket: PictureEditWebSocket | null
-//
-// // 初始化 WebSocket 连接，绑定监听事件
-// const initWebsocket = () => {
-//   const pictureId = props.picture?.id
-//   if (!pictureId || !visible.value) {
-//     return
-//   }
-//   // 防止之前的连接未释放
-//   if (websocket) {
-//     websocket.disconnect()
-//   }
-//   // 创建 websocket 实例
-//   websocket = new PictureEditWebSocket(pictureId)
-//   // 建立连接
-//   websocket.connect()
-//
-//   // 监听一系列的事件
-//   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.INFO, (msg) => {
-//     console.log('收到通知消息：', msg)
-//     message.info(msg.message)
-//   })
-//
-//   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.ERROR, (msg) => {
-//     console.log('收到错误通知：', msg)
-//     message.info(msg.message)
-//   })
-//
-//   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT, (msg) => {
-//     console.log('收到进入编辑状态的消息：', msg)
-//     message.info(msg.message)
-//     editingUser.value = msg.user
-//   })
-//
-//   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EDIT_ACTION, (msg) => {
-//     console.log('收到编辑操作的消息：', msg)
-//     message.info(msg.message)
-//     // 根据收到的编辑操作，执行相应的操作
-//     switch (msg.editAction) {
-//       case PICTURE_EDIT_ACTION_ENUM.ROTATE_LEFT:
-//         rotateLeft()
-//         break
-//       case PICTURE_EDIT_ACTION_ENUM.ROTATE_RIGHT:
-//         rotateRight()
-//         break
-//       case PICTURE_EDIT_ACTION_ENUM.ZOOM_IN:
-//         changeScale(1)
-//         break
-//       case PICTURE_EDIT_ACTION_ENUM.ZOOM_OUT:
-//         changeScale(-1)
-//         break
-//     }
-//   })
-//
-//   websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EXIT_EDIT, (msg) => {
-//     console.log('收到退出编辑状态的消息：', msg)
-//     message.info(msg.message)
-//     editingUser.value = undefined
-//   })
-// }
-//
-// // 监听属性和 visible 变化，初始化 WebSocket 连接
-// watchEffect(() => {
-//   // 只有团队空间，才初始化 WebSocket 连接
-//   if (isTeamSpace.value) {
-//     initWebsocket()
-//   }
-// })
-//
-// // 组件销毁时，断开 WebSocket 连接
-// onUnmounted(() => {
-//   // 断开 WebSocket 连接
-//   if (websocket) {
-//     websocket.disconnect()
-//   }
-//   editingUser.value = undefined
-// })
-//
-// // 进入编辑状态
-// const enterEdit = () => {
-//   if (websocket) {
-//     // 发送进入编辑状态的请求
-//     websocket.sendMessage({
-//       type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT,
-//     })
-//   }
-// }
-//
-// // 退出编辑状态
-// const exitEdit = () => {
-//   if (websocket) {
-//     // 发送退出编辑状态的请求
-//     websocket.sendMessage({
-//       type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.EXIT_EDIT,
-//     })
-//   }
-// }
-//
-// // 编辑图片操作
-// const editAction = (action: string) => {
-//   if (websocket) {
-//     // 发送编辑操作的请求
-//     websocket.sendMessage({
-//       type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.EDIT_ACTION,
-//       editAction: action,
-//     })
-//   }
-// }
+let websocket: PictureEditWebSocket | null
+
+// 初始化 WebSocket 连接，绑定监听事件
+const initWebsocket = () => {
+  const pictureId = props.picture?.id
+  const pictureSpaceId = props.picture?.spaceId
+  if (!pictureId || !visible.value || !pictureSpaceId) {
+    return
+  }
+  // 防止之前的连接未释放
+  if (websocket) {
+    websocket.disconnect()
+  }
+  // 创建 websocket 实例
+  websocket = new PictureEditWebSocket(pictureId, pictureSpaceId)
+  // 建立连接
+  websocket.connect()
+
+  // 监听一系列的事件
+  websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.INFO, (msg) => {
+    console.log('收到通知消息：', msg)
+    message.info(msg.message)
+  })
+
+  websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.ERROR, (msg) => {
+    console.log('收到错误通知：', msg)
+    message.info(msg.message)
+  })
+
+  websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT, (msg) => {
+    console.log('收到进入编辑状态的消息：', msg)
+    message.info(msg.message)
+    editingUser.value = msg.user
+  })
+
+  websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EDIT_ACTION, (msg) => {
+    console.log('收到编辑操作的消息：', msg)
+    message.info(msg.message)
+    // 根据收到的编辑操作，执行相应的操作
+    switch (msg.editAction) {
+      case PICTURE_EDIT_ACTION_ENUM.ROTATE_LEFT:
+        rotateLeft()
+        break
+      case PICTURE_EDIT_ACTION_ENUM.ROTATE_RIGHT:
+        rotateRight()
+        break
+      case PICTURE_EDIT_ACTION_ENUM.ZOOM_IN:
+        changeScale(1)
+        break
+      case PICTURE_EDIT_ACTION_ENUM.ZOOM_OUT:
+        changeScale(-1)
+        break
+    }
+  })
+
+  websocket.on(PICTURE_EDIT_MESSAGE_TYPE_ENUM.EXIT_EDIT, (msg) => {
+    console.log('收到退出编辑状态的消息：', msg)
+    message.info(msg.message)
+    editingUser.value = undefined
+  })
+}
+
+// 监听属性和 visible 变化，初始化 WebSocket 连接
+watchEffect(() => {
+  // 只有团队空间，才初始化 WebSocket 连接
+  if (isTeamSpace.value) {
+    initWebsocket()
+  }
+})
+
+// 组件销毁时，断开 WebSocket 连接
+onUnmounted(() => {
+  // 断开 WebSocket 连接
+  if (websocket) {
+    websocket.disconnect()
+  }
+  editingUser.value = undefined
+})
+
+// 进入编辑状态
+const enterEdit = () => {
+  if (websocket) {
+    // 发送进入编辑状态的请求
+    websocket.sendMessage({
+      type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.ENTER_EDIT,
+    })
+  }
+}
+
+// 退出编辑状态
+const exitEdit = () => {
+  if (websocket) {
+    // 发送退出编辑状态的请求
+    websocket.sendMessage({
+      type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.EXIT_EDIT,
+    })
+  }
+}
+
+// 编辑图片操作
+const editAction = (action: string) => {
+  if (websocket) {
+    // 发送编辑操作的请求
+    websocket.sendMessage({
+      type: PICTURE_EDIT_MESSAGE_TYPE_ENUM.EDIT_ACTION,
+      editAction: action,
+    })
+  }
+}
 </script>
 
 <style>
